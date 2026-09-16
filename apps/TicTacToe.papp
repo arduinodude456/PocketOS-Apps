@@ -1,0 +1,14 @@
+title=TicTacToe
+accent=purple
+label=16,10,2,Tic-Tac-Toe
+label=16,40,1,Du bist X - der Computer ist O
+button=41,58,78,36,,ttt:0
+button=121,58,78,36,,ttt:1
+button=201,58,78,36,,ttt:2
+button=41,98,78,36,,ttt:3
+button=121,98,78,36,,ttt:4
+button=201,98,78,36,,ttt:5
+button=41,138,78,36,,ttt:6
+button=121,138,78,36,,ttt:7
+button=201,138,78,36,,ttt:8
+button=101,180,118,24,NEUES SPIEL,ttt:reset

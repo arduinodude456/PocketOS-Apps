@@ -1,0 +1,9 @@
+title=Snake
+accent=green
+label=16,10,2,SNAKE
+label=16,40,1,Tippe die Pfeile zum Steuern
+button=18,220,84,32,LINKS,snake:left
+button=112,220,84,32,HOCH,snake:up
+button=218,220,84,32,RECHTS,snake:right
+button=112,258,84,30,RUNTER,snake:down
+button=112,294,84,24,NEUES SPIEL,snake:reset

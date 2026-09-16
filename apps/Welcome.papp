@@ -1,0 +1,7 @@
+title=Willkommen
+accent=indigo
+label=16,18,2,PocketOS App Runtime
+label=16,58,1,Apps liegen als .papp-Dateien auf der SD-Karte.
+button=16,102,288,40,Dateien oeffnen,open:files
+button=16,154,288,40,Nachricht,toast:Hallo von der SD-Karte
+button=16,206,288,40,Eingabe testen,input:Notiz

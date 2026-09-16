@@ -1,0 +1,22 @@
+title=Taschenrechner
+accent=green
+label=16,10,2,Taschenrechner
+label=16,42,1,+ - * / und Punkt verwenden
+input=16,66,288,32,Ausdruck
+button=16,108,66,30,7,calc:7
+button=86,108,66,30,8,calc:8
+button=156,108,66,30,9,calc:9
+button=226,108,66,30,/,calc:/
+button=16,140,66,30,4,calc:4
+button=86,140,66,30,5,calc:5
+button=156,140,66,30,6,calc:6
+button=226,140,66,30,*,calc:*
+button=16,172,66,30,1,calc:1
+button=86,172,66,30,2,calc:2
+button=156,172,66,30,3,calc:3
+button=226,172,66,30,-,calc:-
+button=16,204,66,30,0,calc:0
+button=86,204,66,30,.,calc:.
+button=156,204,66,30,=,calc:=
+button=226,204,66,30,+,calc:+
+button=16,236,66,30,C,calc:C

@@ -1,0 +1,8 @@
+title=3D Wuerfel
+accent=blue
+label=16,12,2,Rotierender 3D Wuerfel
+label=16,42,1,Tippe die Pfeile zum Drehen
+button=18,246,84,32,LINKS,cube:y-
+button=112,246,84,32,HOCH,cube:x-
+button=218,246,84,32,RECHTS,cube:y+
+button=112,284,84,30,RUNTER,cube:x+
