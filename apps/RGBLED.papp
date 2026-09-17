@@ -1,0 +1,12 @@
+title=RGB LED
+accent=blue
+label=16,10,2,Onboard RGB LED
+label=16,42,1,FireBeetle 2 ESP32-E
+button=16,78,140,36,ROT,led:red
+button=164,78,140,36,GRUEN,led:green
+button=16,122,140,36,BLAU,led:blue
+button=164,122,140,36,GELB,led:yellow
+button=16,166,140,36,TUERKIS,led:cyan
+button=164,166,140,36,MAGENTA,led:magenta
+button=16,210,140,36,WEISS,led:white
+button=164,210,140,36,AUS,led:off
