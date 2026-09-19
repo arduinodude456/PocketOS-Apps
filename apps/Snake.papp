@@ -11,6 +11,7 @@ var=body_length,3
 var=alive,1
 label=16,10,2,SNAKE
 label=16,40,1,Wandtreffer beendet die Runde
+grid=16,12,16,10,8
 value=16,64,1,score,Punkte: 
 trail=body,body_length,16,12,8
 cell=head,head_x,head_y,16,12,8
