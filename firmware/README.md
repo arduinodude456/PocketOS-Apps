@@ -67,6 +67,16 @@ while x > 0 do
   x = x - 1
 end
 
+-- Begrenzte 1-basierte Arrays und numerische for-Schleifen
+local snake = {{7, 5}, {6, 5}}
+snake[1][1] = snake[1][1] + 1
+table.insert(snake, {5, 5})
+for i = 1, #snake do
+  pocketos.message(snake[i][1])
+end
+local tail = table.remove(snake)       -- letztes Element
+table.insert(snake, 1, tail)           -- optional mit Position
+
 -- Benannte und anonyme Funktionen; Rückgabe und Argumente
 function greet(name)
   return "Hallo " .. name
@@ -78,17 +88,20 @@ end)
 
 | Kategorie | Unterstützt |
 |---|---|
-| Werte | `nil`, `true`, `false`, Dezimalzahlen, Strings, Funktionswerte |
+| Werte | `nil`, `true`, `false`, Dezimalzahlen, Strings, Funktionswerte und begrenzte Array-Tabellen |
 | Variablen | globale Variablen, `local`, Mehrfachzuweisung mit bis zu `POCKETLUA_MAX_ARGS` Namen/Werten |
-| Operatoren | `+`, `-`, `*`, `/`, `%`, `..`, `==`, `~=`, `<`, `<=`, `>`, `>=`, `and`, `or`, `not`, Klammern und unäres `-` |
-| Kontrollfluss | `if` / `elseif` / `else` / `end`, `while` / `do` / `end`, `return` |
+| Tabellen/Arrays | Literale `{expr, ...}`, verschachtelte Tabellen, 1-basierter Zugriff `a[i]`, Zuweisung `a[i] = expr`, Länge `#a`, `table.insert(a [, pos], value)`, `table.remove(a [, pos])` |
+| Operatoren | `+`, `-`, `*`, `/`, `%`, `..`, `#`, `==`, `~=`, `<`, `<=`, `>`, `>=`, `and`, `or`, `not`, Klammern und unäres `-` |
+| Kontrollfluss | `if` / `elseif` / `else` / `end`, `while` / `do` / `end`, numerisches `for name = start, finish [, step] do ... end`, `return` |
 | Funktionen | `function name(args) ... end`, `local function`, anonyme `function(args) ... end`, Aufrufe |
-| Standardbibliothek | ausschließlich `pocketos.*` aus der obigen Tabelle |
+| Standardbibliothek | `pocketos.*` aus der obigen Tabelle sowie die Array-Builtins `table.insert` und `table.remove` |
 
 ## Feste Grenzen und Sicherheitsmodell
 
-PocketLua ist ausdrücklich **kein vollständiges Lua 5.x** und führt weder Bytecode noch eingebettetes C/C++ aus. Nicht implementiert sind Tabellen/Arrays (`{}`, `[]`), `for`/`repeat`, Closures mit eingefangenen lokalen Variablen, Methoden-Syntax (`:`), Punktnotation außer `pocketos.<API>`, Standardmodule (`table`, `string`, `math`), Dateizugriff, `require`, Metatables, `goto`, Fehlerbehandlung mit `pcall` und Garbage Collection. Damit ist die mitgelieferte komplexe Snake-Demo mit Tabellen und numerischen `for`-Schleifen noch **nicht** lauffähig.
+PocketLua ist ausdrücklich **kein vollständiges Lua 5.x** und führt weder Bytecode noch eingebettetes C/C++ aus. Tabellen sind bewusst auf den fortlaufenden, positiven Ganzzahlbereich `1 .. POCKETLUA_MAX_TABLE_ITEMS` beschränkt: Es gibt keine String-Schlüssel, Record-Felder, Iteratoren (`pairs`/`ipairs`), gemischten Tabellen oder Metatables. Die Länge `#a` entspricht dem höchsten fortlaufend belegten Array-Ende; Lücken innerhalb des Arrays sind möglich, aber wie in Lua sollte `#` dafür nicht als allgemeiner Belegungszähler verwendet werden. Eine Zuweisung von `nil` entfernt den betreffenden Eintrag. `table.insert` und `table.remove` verschieben Arrayelemente; ohne Position arbeiten sie am Ende.
+
+Weiterhin nicht implementiert sind generische `for`-Schleifen, `repeat`, Closures mit eingefangenen lokalen Variablen, Methoden-Syntax (`:`), Punktnotation außer den Builtins `pocketos.*` und `table.*`, weitere Standardmodule (`string`, `math`), Dateizugriff, `require`, `goto` und Fehlerbehandlung mit `pcall`. Tabellen werden ausschließlich in festen internen Pools gehalten. Nicht mehr erreichbare Tabellenplätze können innerhalb dieser Pools wiederverwendet werden; es gibt weiterhin weder `malloc`/`new` noch einen dynamisch wachsenden Heap.
 
 Arithmetik arbeitet mit `float`; `%` wandelt beide Operanden in `long`. Vergleiche `<`, `<=`, `>` und `>=` verlangen Zahlen. `==` und `~=` vergleichen Werte gleichen Typs. `and` und `or` liefern wie Lua einen der beiden Werte, werten ihre rechte Seite in dieser ersten Version jedoch **nicht kurzschlussartig** aus. Unbekannte Variablen liefern `nil`; unbekannte Funktionen und Syntax-/Laufzeitfehler setzen `vm.error()`.
 
-Der Interpreter ist begrenzt durch `POCKETLUA_MAX_TOKENS` (512), `POCKETLUA_MAX_VARS` (48), `POCKETLUA_MAX_FUNCS` (20), `POCKETLUA_MAX_EVENTS` (12), `POCKETLUA_MAX_ARGS` (8), `POCKETLUA_NAME_SIZE` (32), `POCKETLUA_STRING_SIZE` (96) und `POCKETLUA_MAX_STEPS` (10.000). Die Makros können **vor** dem Include projektweit angepasst werden. Das Schrittlimit begrenzt Endlosschleifen; für strikte Laufzeitbudgets sollte die Firmware zusätzlich eine App nur in kontrollierten Event-Zyklen dispatchen.
+Der Interpreter ist begrenzt durch `POCKETLUA_MAX_TOKENS` (512), `POCKETLUA_MAX_VARS` (48), `POCKETLUA_MAX_FUNCS` (20), `POCKETLUA_MAX_EVENTS` (12), `POCKETLUA_MAX_ARGS` (8), `POCKETLUA_NAME_SIZE` (32), `POCKETLUA_STRING_SIZE` (96), `POCKETLUA_MAX_TABLES` (32), `POCKETLUA_MAX_TABLE_ITEMS` (64 Elemente pro Tabelle), `POCKETLUA_MAX_TABLE_VALUES` (256 gleichzeitig belegte Arrayzellen über alle Tabellen) und `POCKETLUA_MAX_STEPS` (10.000). Die Makros können **vor** dem Include projektweit angepasst werden. Da die Pools als feste Felder in jeder `PocketLua`-Instanz liegen, erhöhen größere Werte unmittelbar deren statischen RAM-Bedarf. Das Schrittlimit begrenzt Endlosschleifen; für strikte Laufzeitbudgets sollte die Firmware zusätzlich eine App nur in kontrollierten Event-Zyklen dispatchen.

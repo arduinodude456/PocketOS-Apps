@@ -2036,7 +2036,7 @@ void loop() {
 static void plLabel(void*, int x, int y, int size, const char *s) { drawText(String(s), x, contentTop()+y, constrain(size,1,2), colors.text); }
 static void plValue(void*, int x, int y, int size, const char *s) { drawText(String(s), x, contentTop()+y, constrain(size,1,2), colors.accent2); }
 static void plGrid(void*, int x, int y, int cols, int rows, int cell) { for(int gy=0;gy<rows;++gy) for(int gx=0;gx<cols;++gx) tft.drawRect(x+gx*cell,contentTop()+y+gy*cell,cell,cell,colors.cardAlt); }
-static void plCell(void*, int x, int y, int cell, int col, int row, const char *style) { String kind=style?style:"body"; uint16_t fill=kind=="food"?colors.danger:(kind=="head"?colors.accent:colors.accent2); tft.fillRect(x+col*cell+1,contentTop()+y+row*cell+1,max(1,cell-2),max(1,cell-2),fill); }
+static void plCell(void*, int x, int y, int cell, int col, int row, const char *style) { String kind=style?style:"body"; int cx=x+col*cell+cell/2, cy=contentTop()+y+row*cell+cell/2; if(kind=="x"){tft.drawLine(cx-12,cy-12,cx+12,cy+12,colors.accent);tft.drawLine(cx+12,cy-12,cx-12,cy+12,colors.accent);} else if(kind=="o"){tft.drawCircle(cx,cy,12,colors.accent2);} else {uint16_t fill=kind=="food"?colors.danger:(kind=="head"?colors.accent:colors.accent2);tft.fillRect(x+col*cell+1,cy-cell/2+1,max(1,cell-2),max(1,cell-2),fill);} }
 static void plButton(void*, int x, int y, int w, int h, const char *label, const char *action) { addRuntimeButton(x,contentTop()+y,w,h,String(label?label:""),String("plua:")+(action?action:""),colors.accent); }
 static void plMessage(void*, const char *s) { appRuntimeMessage=s?s:""; }
 static void plTimer(void*, unsigned long ms) { pocketLuaTimerInterval=max(16UL,ms); pocketLuaLastTimer=millis(); }
@@ -2049,7 +2049,7 @@ void pocketLuaHostSetup() { PocketLuaHost host={}; host.context=nullptr; host.la
 bool pocketLuaLoad(const char *path) { pocketLuaClose(); if(!storageReady())return false; File f=SD.open(path,"r"); if(!f)return false; pocketLuaSource.reserve(min((size_t)24576,(size_t)f.size())); while(f.available()&&pocketLuaSource.length()<24576)pocketLuaSource+=(char)f.read(); f.close(); pocketLuaHostSetup(); if(!pocketLua.load(pocketLuaSource.c_str())||!pocketLua.run()){showToast(String("PocketLua: ")+pocketLua.error());return false;} pocketLuaLoaded=true; pocketLua.dispatch("start"); redrawRequested=true; return true; }
 void pocketLuaRender() { if(!pocketLuaLoaded)return; drawAppFrame(addonApps[activeAddon].title,"PocketLua"); appButtonCount=0; pocketLua.dispatch("draw"); if(appRuntimeMessage.length())drawCentered(appRuntimeMessage,screenW()/2,contentBottom()-12,1,colors.muted); }
 void pocketLuaRunTimers() { if(!pocketLuaLoaded||screen!=SC_APP_RUNNER||!pocketLuaTimerInterval)return; if(millis()-pocketLuaLastTimer>=pocketLuaTimerInterval){pocketLuaLastTimer=millis();pocketLua.dispatch("tick");redrawRequested=true;} }
-void pocketLuaTouch(const String &action) { if(pocketLuaLoaded){pocketLua.dispatch(action.c_str());redrawRequested=true;} }
+void pocketLuaTouch(const String &action) { if(pocketLuaLoaded){pocketLua.dispatch("touch", action.c_str());redrawRequested=true;} }
 
 // ---------------------------------------------------------------------------
 // PocketOS generic SD app VM
