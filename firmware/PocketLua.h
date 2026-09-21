@@ -272,7 +272,7 @@ private:
     if (match(pc, T_LOCAL)) { executeLocal(pc); return; }
     if (match(pc, T_IF)) { executeIf(pc); return; }
     if (match(pc, T_WHILE)) { executeWhile(pc); return; }
-    if (match(pc, T_RETURN)) { _returnValue = parseExpression(pc); _returning = true; return; }
+    if (match(pc, T_RETURN)) { _returnValue = (tokenIs(pc, T_END) || tokenIs(pc, T_ELSE) || tokenIs(pc, T_ELSEIF) || tokenIs(pc, T_EOF) || tokenIs(pc, T_SEMI)) ? nil() : parseExpression(pc); _returning = true; return; }
     if (match(pc, T_FUNCTION)) { executeNamedFunction(pc, false); return; }
     if (tokenIs(pc, T_IDENT) && (tokenIs(pc + 1, T_ASSIGN) || tokenIs(pc + 1, T_COMMA))) { executeAssignment(pc, false); return; }
     Value v = parseExpression(pc);
