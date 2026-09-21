@@ -1,6 +1,6 @@
 Taschenrechner,apps/Taschenrechner.papp,Rechnen mit Punkt-vor-Strich,green
 TicTacToe,apps/TicTacToe.papp,Spiele gegen den Computer,purple
 3D Wuerfel,apps/3DWuerfel.papp,Rotierender 3D-Wuerfel,blue
-Snake,apps/Snake.papp,Klassisches Snake-Spiel,green
+Snake,apps/Snake.lua,Klassisches Snake-Spiel,green
 Welcome,apps/Welcome.papp,PocketOS-Beispielapp,indigo
 RGB LED,apps/RGBLED.papp,Onboard RGB LED steuern,blue

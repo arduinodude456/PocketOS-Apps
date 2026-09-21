@@ -1,6 +1,6 @@
 # PocketOS App Format
 
-PocketOS apps are plain-text `.papp` files stored on the SD card. The firmware reads the source line by line; it does not compile app code and it does not identify apps by their title. Snake, 3D wireframes and other examples use the same generic VM primitives.
+PocketOS apps are plain-text `.papp` or `.lua` files stored on the SD card. `.papp` files use the lightweight declarative VM; `.lua` files are executed by the embedded Lua 5.4 interpreter. Apps are discovered by extension and do not need firmware-specific app names.
 
 ## Memory model
 
@@ -27,9 +27,13 @@ Conditional events use `event-if=event,var,operator,value,action`, where `operat
 
 The comma-separated button geometry ends after the fifth comma; everything after the label is the action. This allows actions such as `add,counter,1` without firmware-specific prefixes.
 
+## Lua apps
+
+Lua apps register lifecycle callbacks with `pocketos.on("start", fn)`, `pocketos.on("draw", fn)`, `pocketos.on("tick", fn)` and `pocketos.on("touch", fn)`. The display and input surface is deliberately small: `pocketos.label(x,y,size,text)`, `pocketos.value(x,y,size,text)`, `pocketos.grid(x,y,columns,rows,cell)`, `pocketos.cell(x,y,cell,gridX,gridY,kind)`, `pocketos.button(x,y,w,h,label,action)`, `pocketos.message(text)`, `pocketos.timer(milliseconds)` and `pocketos.random(maximum)`. Coordinates are relative to the content area, just like `.papp` files. Button actions are passed to the `touch` callback.
+
 ## Examples
 
-`Snake.papp` demonstrates a timer-driven grid, SD-backed variables and a generic trail. `3DWuerfel.papp` demonstrates vertices, edges, rotation variables and a timer. These files do not call `startSnake()` or `startCube()` and their titles are not special to the firmware.
+`Snake.lua` demonstrates a real Lua app with a timer-driven grid, touch buttons, collision detection and food placement. `3DWuerfel.papp` demonstrates the declarative VM's vertices, edges, rotation variables and a timer. Apps do not call firmware-specific functions such as `startSnake()` or `startCube()`.
 
 ## Design limits
 
