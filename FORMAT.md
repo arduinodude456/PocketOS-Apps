@@ -21,7 +21,9 @@ event=tick,add,counter,1
 event=tick,redraw
 ```
 
-Supported primitives include `label`, `button`, `var`, `grid`, `cell`, `trail`, `vertex`, `edge`, `timer` and `event`. Button actions and event actions are generic commands: `set`, `add`, `toggle`, `wrap`, `random`, `trail`, `message`, `reset` and `redraw`.
+Supported primitives include `label`, `button`, `var`, `grid`, `cell`, `trail`, `vertex`, `edge`, `timer` and `event`. Button actions and event actions are generic commands: `set`, `add`, `toggle`, `wrap`, `random`, `trail`, `message`, `reset` and `redraw`. `reset` restores the declared `var` defaults and removes the persisted app state.
+
+Conditional events use `event-if=event,var,operator,value,action`, where `operator` may be `==`, `!=`, `<`, `<=`, `>` or `>=`. The legacy two-coordinate equality form `event-if=event,xVar,xValue,yVar,yValue,action` is also supported for grid games.
 
 The comma-separated button geometry ends after the fifth comma; everything after the label is the action. This allows actions such as `add,counter,1` without firmware-specific prefixes.
 
